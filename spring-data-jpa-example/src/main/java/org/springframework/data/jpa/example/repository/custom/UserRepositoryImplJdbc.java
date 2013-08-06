@@ -1,4 +1,4 @@
-package org.springframework.data.jpa.example.repository;
+package org.springframework.data.jpa.example.repository.custom;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,7 +28,7 @@ import org.springframework.jdbc.core.support.JdbcDaoSupport;
  * 
  * @author Oliver Gierke
  */
-class UserRepositoryJdbcImpl extends JdbcDaoSupport implements UserRepositoryCustom {
+public class UserRepositoryImplJdbc extends JdbcDaoSupport implements UserRepositoryCustom {
 
 	private static final String COMPLICATED_SQL = "SELECT * FROM User";
 

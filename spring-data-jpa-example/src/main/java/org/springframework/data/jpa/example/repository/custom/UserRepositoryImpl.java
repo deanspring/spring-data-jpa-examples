@@ -1,4 +1,4 @@
-package org.springframework.data.jpa.example.repository;
+package org.springframework.data.jpa.example.repository.custom;
 
 import java.util.List;
 
@@ -29,14 +29,13 @@ import org.springframework.data.jpa.example.domain.User;
  * &lt;jpa:repositories base-package=&quot;com.acme.repository&quot; /&gt;
  * </pre>
  * 
- * If you need to manually configure the custom instance see {@link UserRepositoryJdbcImpl} for an example.
+ * If you need to manually configure the custom instance see {@link UserRepositoryImplJdbc} for an example.
  * 
  * @author Oliver Gierke
  */
-class UserRepositoryImpl implements UserRepositoryCustom {
+public class UserRepositoryImpl implements UserRepositoryCustom {
 
-	@PersistenceContext
-	private EntityManager em;
+	@PersistenceContext private EntityManager em;
 
 	/**
 	 * Configure the entity manager to be used.

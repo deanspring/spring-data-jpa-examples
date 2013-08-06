@@ -18,6 +18,8 @@ package org.springframework.data.jpa.example.repository.caching;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,15 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.Cache.ValueWrapper;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.concurrent.ConcurrentMapCache;
+import org.springframework.cache.support.SimpleCacheManager;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.example.domain.User;
+import org.springframework.data.jpa.example.repository.InfrastructureConfig;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,14 +46,36 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Oliver Gierke
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = CachingConfiguration.class)
+@ContextConfiguration
 @Transactional
 public class CachingRepositoryTests {
 
-	@Autowired
-	CachingUserRepository repository;
-	@Autowired
-	CacheManager cacheManager;
+	/**
+	 * Java config to use Spring Data JPA alongside the Spring caching support.
+	 * 
+	 * @author Oliver Gierke
+	 * @author Thomas Darimont
+	 */
+	@Configuration
+	@Import(InfrastructureConfig.class)
+	@EnableJpaRepositories
+	@EnableCaching
+	static class Config {
+
+		@Bean
+		public CacheManager cacheManager() {
+
+			Cache cache = new ConcurrentMapCache("byUsername");
+
+			SimpleCacheManager manager = new SimpleCacheManager();
+			manager.setCaches(Arrays.asList(cache));
+
+			return manager;
+		}
+	}
+
+	@Autowired CachingUserRepository repository;
+	@Autowired CacheManager cacheManager;
 
 	@Test
 	public void cachesValuesReturnedForQueryMethod() {

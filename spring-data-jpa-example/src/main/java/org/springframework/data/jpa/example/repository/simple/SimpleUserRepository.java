@@ -13,7 +13,7 @@ import org.springframework.data.repository.query.Param;
  * 
  * @author Oliver Gierke
  */
-public interface SimpleUserRepository extends CrudRepository<User, Long> {
+interface SimpleUserRepository extends CrudRepository<User, Long> {
 
 	/**
 	 * Find the user with the given username. This method will be translated into a query using the

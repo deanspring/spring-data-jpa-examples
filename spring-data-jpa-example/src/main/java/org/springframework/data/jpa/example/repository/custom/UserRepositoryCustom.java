@@ -1,4 +1,4 @@
-package org.springframework.data.jpa.example.repository;
+package org.springframework.data.jpa.example.repository.custom;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import org.springframework.data.jpa.example.domain.User;
  * 
  * @author Oliver Gierke
  */
-interface UserRepositoryCustom {
+public interface UserRepositoryCustom {
 
 	/**
 	 * Custom repository operation.

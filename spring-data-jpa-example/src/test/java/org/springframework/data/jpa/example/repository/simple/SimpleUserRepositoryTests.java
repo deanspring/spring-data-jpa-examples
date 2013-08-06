@@ -1,4 +1,4 @@
-package org.springframework.data.jpa.example.repository;
+package org.springframework.data.jpa.example.repository.simple;
 
 import static org.junit.Assert.*;
 
@@ -8,8 +8,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.example.domain.User;
-import org.springframework.data.jpa.example.repository.simple.SimpleUserRepository;
+import org.springframework.data.jpa.example.repository.InfrastructureConfig;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,30 +21,31 @@ import org.springframework.transaction.annotation.Transactional;
  * Intergration test showing the basic usage of {@link SimpleUserRepository}.
  * 
  * @author Oliver Gierke
+ * @author Thomas Darimont
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:simple-repository-context.xml")
+@ContextConfiguration
 @Transactional
-public class SimpleUserRepositorySample {
+public class SimpleUserRepositoryTests {
 
-	@Autowired
-	SimpleUserRepository repository;
+	@Configuration
+	@Import(InfrastructureConfig.class)
+	@EnableJpaRepositories
+	static class Config {}
+
+	@Autowired SimpleUserRepository repository;
 	User user;
 
 	@Before
 	public void setUp() {
-
 		user = new User();
 		user.setUsername("foobar");
 		user.setFirstname("firstname");
 		user.setLastname("lastname");
 	}
 
-	/**
-	 * Tests inserting a user and asserts it can be loaded again.
-	 */
 	@Test
-	public void testInsert() {
+	public void findSavedUserById() {
 
 		user = repository.save(user);
 
@@ -49,7 +53,7 @@ public class SimpleUserRepositorySample {
 	}
 
 	@Test
-	public void foo() throws Exception {
+	public void findSavedUserByLastname() throws Exception {
 
 		user = repository.save(user);
 
@@ -60,7 +64,7 @@ public class SimpleUserRepositorySample {
 	}
 
 	@Test
-	public void testname() throws Exception {
+	public void findByFirstnameOrLastname() throws Exception {
 
 		user = repository.save(user);
 

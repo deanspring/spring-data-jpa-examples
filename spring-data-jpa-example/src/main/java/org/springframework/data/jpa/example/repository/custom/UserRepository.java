@@ -1,4 +1,4 @@
-package org.springframework.data.jpa.example.repository;
+package org.springframework.data.jpa.example.repository.custom;
 
 import java.util.List;
 

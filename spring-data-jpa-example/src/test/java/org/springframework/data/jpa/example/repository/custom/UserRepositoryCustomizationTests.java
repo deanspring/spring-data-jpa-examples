@@ -1,13 +1,20 @@
-package org.springframework.data.jpa.example.repository;
+package org.springframework.data.jpa.example.repository.custom;
 
 import static org.junit.Assert.*;
 
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.example.domain.User;
+import org.springframework.data.jpa.example.repository.InfrastructureConfig;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,12 +25,30 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Oliver Gierke
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:repository-context.xml")
+@ContextConfiguration
 @Transactional
-public class UserRepositorySample {
+public class UserRepositoryCustomizationTests {
 
-	@Autowired
-	UserRepository repository;
+	@Configuration
+	@Import(InfrastructureConfig.class)
+	@EnableJpaRepositories
+	static class Config {
+		// @Bean
+		// public UserRepositoryCustom userRepositoryImpl(EntityManager entityManager) {
+		// UserRepositoryImpl customUserRepository = new UserRepositoryImpl();
+		// customUserRepository.setEntityManager(entityManager);
+		// return customUserRepository;
+		// }
+
+		@Bean
+		public UserRepositoryCustom userRepositoryImpl(DataSource dataSource) {
+			UserRepositoryImplJdbc customUserRepository = new UserRepositoryImplJdbc();
+			customUserRepository.setDataSource(dataSource);
+			return customUserRepository;
+		}
+	}
+
+	@Autowired UserRepository repository;
 
 	/**
 	 * Tests inserting a user and asserts it can be loaded again.
